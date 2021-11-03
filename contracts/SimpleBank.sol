@@ -1,8 +1,3 @@
-/*
- * This exercise has been updated to use Solidity version 0.8.5
- * See the latest Solidity updates at
- * https://solidity.readthedocs.io/en/latest/080-breaking-changes.html
- */
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.16 <0.9.0;
 
@@ -10,9 +5,7 @@ contract SimpleBank {
 
     /* State variables
      */
-    
-    
-    // Fill in the visibility keyword. 
+        
     // Hint: We want to protect our users balance from other contracts
      mapping (address => uint) private balances;
     
@@ -23,7 +16,7 @@ contract SimpleBank {
 
     // Let's make sure everyone knows who owns the bank, yes, fill in the
     // appropriate visilibility keyword
-     address payable public owner = msg.sender;
+     address public owner = msg.sender;
     
     /* Events - publicize actions to external listeners
      */
@@ -36,7 +29,7 @@ contract SimpleBank {
 
     // Create an event called LogWithdrawal
     // Hint: it should take 3 arguments: an accountAddress, withdrawAmount and a newBalance 
-    event LogWithdrawal(address indexed accountAddress, uint256 indexed withdrawAmount, uint256 newBalance);
+    event LogWithdrawal(address indexed accountAddress, uint256 withdrawAmount, uint256 newBalance);
 
     /* Functions
      */
@@ -67,14 +60,17 @@ contract SimpleBank {
       balances[msg.sender] = 0;
       enrolled[msg.sender] = true;
       emit LogEnrolled(msg.sender);
+      return enrolled [msg.sender]
     }
-
+    // function enrolled() public returns (bool){
+    //   return enrolled[msg.sender];
+    // }
     /// @notice Deposit ether into bank
     /// @return The balance of the user after the deposit is made
-        function deposit() payable public returns (uint) {
+     function deposit() payable public returns (uint) {
       require(enrolled[msg.sender]);
-      balances[msg.sender]+=msg.value;
-      emit LogDepositMade(msg.sender);
+      balances[msg.sender] = balances[msg.sender] + msg.value;
+      emit LogDepositMade(msg.sender, msg.value);
       return balances[msg.sender];
       // 1. Add the appropriate keyword so that this function can receive ether
     
@@ -94,9 +90,9 @@ contract SimpleBank {
     /// @return The balance remaining for the user
     function withdraw(uint withdrawAmount) public returns (uint) {
       require(balances[msg.sender]>=withdrawAmount, "Insufficient balance");
-      balances[msg.sender]-=msg.value;
-      payable(msg.sender).transfer(withdrawAmount);
-      emit LogWithdrawal(msg.sender); 
+      balances[msg.sender]= balances[msg.sender] - withdrawAmount;
+      msg.sender.transfer(withdrawAmount);
+      emit LogWithdrawal(msg.sender, withdrawAmount, balances[msg.sender]); 
       return balances[msg.sender];
       // If the sender's balance is at least the amount they want to withdraw,
       // Subtract the amount from the sender's balance, and try to send that amount of ether
