@@ -60,7 +60,7 @@ contract SimpleBank {
       balances[msg.sender] = 0;
       enrolled[msg.sender] = true;
       emit LogEnrolled(msg.sender);
-      return enrolled [msg.sender]
+      return enrolled [msg.sender];
     }
     // function enrolled() public returns (bool){
     //   return enrolled[msg.sender];
